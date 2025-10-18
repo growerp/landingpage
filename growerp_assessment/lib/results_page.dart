@@ -94,7 +94,7 @@ class ResultsPage extends StatelessWidget {
     int score = 0;
     final erpSteps = surveyResult.results
         .where((stepResult) =>
-            stepResult.id.contains('ERP Best Practices'))
+            stepResult.id.startsWith('erp_'))
         .toList();
 
     for (var stepResult in erpSteps) {
@@ -110,7 +110,7 @@ class ResultsPage extends StatelessWidget {
     final preferredSolutionStep = surveyResult.results.firstWhere(
         (stepResult) =>
             stepResult.id ==
-            'Qualification Questions_Which solution setup would suit your company best?');
+            'qualification_preferred_solution');
 
     final answer = preferredSolutionStep.result as TextChoice;
 

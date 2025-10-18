@@ -29,3 +29,9 @@ Thumbs.db
 
 # User-specific files
 local.properties
+
+# Log files
+flutter_run.log
+
+# Generated files
+.flutter-plugins-dependencies
