@@ -74,7 +74,7 @@ class ResultsPage extends StatelessWidget {
   }
 
   Widget _buildInsightsWidget(BuildContext context) {
-    // TODO: Implement more detailed insights based on the answers.
+    final insights = _getInsights();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -84,14 +84,10 @@ class ResultsPage extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 10),
-        const Text(
-          'You have a strong foundation for ERP adoption.',
-          textAlign: TextAlign.center,
-        ),
-        const Text(
-          'Consider focusing on process automation.',
-          textAlign: TextAlign.center,
-        ),
+        ...insights.map((insight) => Text(
+              '• $insight',
+              textAlign: TextAlign.center,
+            )),
       ],
     );
   }
@@ -118,8 +114,7 @@ class ResultsPage extends StatelessWidget {
   int _calculateScore() {
     int score = 0;
     final erpSteps = surveyResult.results
-        .where((stepResult) =>
-            stepResult.id.startsWith('erp_'))
+        .where((stepResult) => stepResult.id.startsWith('erp_'))
         .toList();
 
     for (var stepResult in erpSteps) {
@@ -131,11 +126,60 @@ class ResultsPage extends StatelessWidget {
     return ((score / erpSteps.length) * 100).round();
   }
 
+  List<String> _getInsights() {
+    final insights = <String>[];
+    final erpSteps = surveyResult.results
+        .where((stepResult) => stepResult.id.startsWith('erp_'))
+        .toList();
+
+    for (var stepResult in erpSteps) {
+      final answer = stepResult.result as BooleanResult?;
+      if (answer == BooleanResult.negative) {
+        switch (stepResult.id) {
+          case 'erp_centralized_system':
+            insights.add('Centralize your data for a single source of truth.');
+            break;
+          case 'erp_ecommerce_automation':
+            insights.add('Automate your e-commerce and financial data flow.');
+            break;
+          case 'erp_customer_history':
+            insights.add('Provide your sales team with a complete customer history.');
+            break;
+          case 'erp_inventory_visibility':
+            insights.add('Gain real-time visibility into your inventory levels.');
+            break;
+          case 'erp_purchasing_automation':
+            insights.add('Automate your purchasing process to reduce stockouts.');
+            break;
+          case 'erp_financial_reporting':
+            insights.add('Enable real-time financial reporting without spreadsheets.');
+            break;
+          case 'erp_automated_workflows':
+            insights.add('Connect your departments with automated workflows.');
+            break;
+          case 'erp_mobile_access':
+            insights.add('Empower your team with mobile access to key data.');
+            break;
+          case 'erp_customer_service_visibility':
+            insights.add('Give your customer service team instant order visibility.');
+            break;
+          case 'erp_single_source_of_truth':
+            insights.add('Unify your business data to work from a single version of the truth.');
+            break;
+        }
+      }
+    }
+
+    if (insights.isEmpty) {
+      insights.add('You have a strong foundation for ERP adoption!');
+    }
+
+    return insights.take(3).toList();
+  }
+
   String _getNextStep() {
     final preferredSolutionStep = surveyResult.results.firstWhere(
-        (stepResult) =>
-            stepResult.id ==
-            'qualification_preferred_solution');
+        (stepResult) => stepResult.id == 'qualification_preferred_solution');
 
     final answer = preferredSolutionStep.result as TextChoice;
 

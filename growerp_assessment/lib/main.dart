@@ -100,22 +100,25 @@ class SurveyPage extends StatelessWidget {
           ),
         ],
       ),
-      body: SurveyKit(
-        onResult: (SurveyResult result) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ResultsPage(surveyResult: result),
-            ),
-          );
-        },
-        task: assessmentSurvey,
-        localizations: const {
-          'cancel': 'Cancel',
-          'next': 'Next',
-        },
-        surveyProgressbarConfiguration: SurveyProgressConfiguration(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Theme(
+        data: Theme.of(context),
+        child: SurveyKit(
+          onResult: (SurveyResult result) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ResultsPage(surveyResult: result),
+              ),
+            );
+          },
+          task: assessmentSurvey,
+          localizations: const {
+            'cancel': 'Cancel',
+            'next': 'Next',
+          },
+          surveyProgressbarConfiguration: SurveyProgressConfiguration(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          ),
         ),
       ),
     );
