@@ -1,0 +1,125 @@
+
+[
+  {
+    "question": "What is your name?",
+    "is_mandatory": true,
+    "type": "TextField",
+    "id": "name"
+  },
+  {
+    "question": "What is your email address?",
+    "is_mandatory": true,
+    "type": "TextField",
+    "id": "email"
+  },
+  {
+    "question": "What is your phone number?",
+    "type": "TextField",
+    "id": "phone"
+  },
+  {
+    "question": "Do you currently automate inter-departmental workflows (e.g., sales data directly populating finance reports)?",
+    "type": "Radio",
+    "options": ["Yes", "No"],
+    "id": "automation"
+  },
+  {
+    "question": "Do all employees rely on a single, centralized database for customer and operational data?",
+    "type": "Radio",
+    "options": ["Yes", "No"],
+    "id": "centralized_database"
+  },
+  {
+    "question": "Can your current financial system generate real-time quarterly reports in under 5 minutes?",
+    "type": "Radio",
+    "options": ["Yes", "No"],
+    "id": "real_time_reporting"
+  },
+  {
+    "question": "Is your inventory management system fully automated?",
+    "type": "Radio",
+    "options": ["Yes", "No"],
+    "id": "inventory_management"
+  },
+  {
+    "question": "Do you have a system for tracking customer interactions across all departments?",
+    "type": "Radio",
+    "options": ["Yes", "No"],
+    "id": "customer_tracking"
+  },
+  {
+    "question": "Are your financial and operational data integrated?",
+    "type": "Radio",
+    "options": ["Yes", "No"],
+    "id": "data_integration"
+  },
+  {
+    "question": "Can you access your ERP system from mobile devices?",
+    "type": "Radio",
+    "options": ["Yes", "No"],
+    "id": "mobile_access"
+  },
+  {
+    "question": "Is your data backed up automatically and securely?",
+    "type": "Radio",
+    "options": ["Yes", "No"],
+    "id": "data_backup"
+  },
+  {
+    "question": "Do you have a dedicated IT team to manage your ERP system?",
+    "type": "Radio",
+    "options": ["Yes", "No"],
+    "id": "it_team"
+  },
+  {
+    "question": "Is your ERP system customized to your specific business needs?",
+    "type": "Radio",
+    "options": ["Yes", "No"],
+    "id": "customization"
+  },
+  {
+    "question": "Which best describes your company's stage of growth?",
+    "type": "Radio",
+    "options": [
+      "Rapidly scaling startup",
+      "Established mid-market firm",
+      "Large enterprise managing legacy systems"
+    ],
+    "id": "current_situation"
+  },
+  {
+    "question": "Which desired outcome is most important for your business to achieve in the next 90 days?",
+    "type": "Radio",
+    "options": [
+      "Reduce operational costs by 15%",
+      "Achieve faster financial closing times",
+      "Successfully integrate a new business acquisition"
+    ],
+    "id": "desired_outcome"
+  },
+  {
+    "question": "What obstacle do you believe is currently stopping your organization from successfully implementing a new ERP system?",
+    "type": "Radio",
+    "options": [
+      "Internal resistance/change management issues",
+      "Uncertainty about total cost/ROI",
+      "Lack of high-level buy-in"
+    ],
+    "id": "primary_obstacle"
+  },
+  {
+    "question": "Which solution setup would suit your company best?",
+    "type": "Radio",
+    "options": [
+      "I want a vendor-managed implementation with extensive training.",
+      "I prefer a modular SaaS solution that our internal team can mostly manage.",
+      "We are primarily seeking educational resources and training guides."
+    ],
+    "id": "preferred_solution"
+  },
+  {
+    "question": "Is there anything else about your current ERP strategy or timeline that we should know?",
+    "type": "TextField",
+    "id": "open_box"
+  }
+]

@@ -1,8 +1,9 @@
+
 import 'package:flutter/material.dart';
-import 'package:survey_kit/survey_kit.dart';
+import 'package:flutter_survey/flutter_survey.dart';
 
 class ResultsPage extends StatelessWidget {
-  final SurveyResult surveyResult;
+  final List<QuestionResult> surveyResult;
 
   const ResultsPage({Key? key, required this.surveyResult}) : super(key: key);
 
@@ -10,121 +11,163 @@ class ResultsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your ERP Readiness Score'),
+        title: const Text('Assessment Results'),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Thank you for completing the assessment!',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                _buildScoreWidget(context),
-                const SizedBox(height: 20),
-                _buildInsightsWidget(context),
-                const SizedBox(height: 20),
-                _buildNextStepsWidget(context),
-              ],
-            ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildScore(),
+              const SizedBox(height: 24),
+              _buildInsights(),
+              const SizedBox(height: 24),
+              _buildNextSteps(),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildScoreWidget(BuildContext context) {
+  Widget _buildScore() {
     final score = _calculateScore();
-    return Column(
-      children: [
-        Text(
-          'Your ERP Readiness Score is:',
-          style: Theme.of(context).textTheme.titleMedium,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Text(
+              'ERP Readiness Score',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            LinearProgressIndicator(
+              value: score / 100,
+              minHeight: 20,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '$score%',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
-        Text(
-          '$score%',
-          style: Theme.of(context).textTheme.displayMedium,
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _buildInsightsWidget(BuildContext context) {
-    // TODO: Implement more detailed insights based on the answers.
-    return Column(
-      children: [
-        Text(
-          'Insights:',
-          style: Theme.of(context).textTheme.titleMedium,
+  Widget _buildInsights() {
+    final insights = _getInsights();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Insights',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            for (final insight in insights)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text('• $insight'),
+              ),
+          ],
         ),
-        const Text(
-          'You have a strong foundation for ERP adoption.',
-          textAlign: TextAlign.center,
-        ),
-        const Text(
-          'Consider focusing on process automation.',
-          textAlign: TextAlign.center,
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _buildNextStepsWidget(BuildContext context) {
-    final nextStep = _getNextStep();
-    return Column(
-      children: [
-        Text(
-          'Next Steps:',
-          style: Theme.of(context).textTheme.titleMedium,
+  Widget _buildNextSteps() {
+    final nextSteps = _getNextSteps();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Next Steps',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(nextSteps),
+          ],
         ),
-        Text(
-          nextStep,
-          textAlign: TextAlign.center,
-        ),
-      ],
+      ),
     );
   }
 
   int _calculateScore() {
     int score = 0;
-    final erpSteps = surveyResult.results
-        .where((stepResult) =>
-            stepResult.id.startsWith('erp_'))
-        .toList();
-
-    for (var stepResult in erpSteps) {
-      final answer = stepResult.result as BooleanResult?;
-      if (answer == BooleanResult.positive) {
-        score++;
+    final bestPracticesQuestions = [
+      'automation',
+      'centralized_database',
+      'real_time_reporting',
+      'inventory_management',
+      'customer_tracking',
+      'data_integration',
+      'mobile_access',
+      'data_backup',
+      'it_team',
+      'customization',
+    ];
+    for (final result in surveyResult) {
+      if (bestPracticesQuestions.contains(result.question) &&
+          result.answers.contains('Yes')) {
+        score += 10;
       }
     }
-    return ((score / erpSteps.length) * 100).round();
+    return score;
   }
 
-  String _getNextStep() {
-    final preferredSolutionStep = surveyResult.results.firstWhere(
-        (stepResult) =>
-            stepResult.id ==
-            'qualification_preferred_solution');
-
-    final answer = preferredSolutionStep.result as TextChoice;
-
-    switch (answer.value) {
-      case 'vendor-managed':
-        return 'We recommend a 1:1 consultation to discuss a vendor-managed implementation. A specialist will contact you shortly.';
-      case 'saas':
-        return 'We recommend exploring our modular SaaS solutions. You will receive an email with more information and a link to a group presentation.';
-      case 'open-source':
-        return 'We recommend exploring our open-source solutions. You will receive an email with links to our documentation and community forums.';
-      case 'research':
-        return 'We recommend starting with our educational resources. You will receive an email with links to our guides and whitepapers.';
-      default:
-        return 'Thank you for your feedback.';
+  List<String> _getInsights() {
+    final insights = <String>[];
+    if (_getRadioResult('automation') == 'No') {
+      insights.add('Focus on automating inter-departmental workflows.');
     }
+    if (_getRadioResult('centralized_database') == 'No') {
+      insights.add('Centralize customer and operational data.');
+    }
+    if (_getRadioResult('real_time_reporting') == 'No') {
+      insights.add('Improve your real-time reporting capabilities.');
+    }
+    return insights.take(3).toList();
+  }
+
+  String _getNextSteps() {
+    final preferredSolution = _getRadioResult('preferred_solution');
+    if (preferredSolution == 'I want a vendor-managed implementation with extensive training.') {
+      return 'Offer a direct 1:1 consultation or demo.';
+    } else if (preferredSolution == 'I prefer a modular SaaS solution that our internal team can mostly manage.') {
+      return 'Offer a free Group Presentation or a detailed e-book download.';
+    } else {
+      return 'Recommend a specific, relevant piece of content, such as a video episode or blog post on "Getting Started with ERP," or a book.';
+    }
+  }
+
+  String? _getRadioResult(String id) {
+    for (final result in surveyResult) {
+      if (result.question == id) {
+        return result.answers.first;
+      }
+    }
+    return null;
   }
 }
